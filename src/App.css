@@ -52,6 +52,9 @@ button.square {
 	background-color: bisque;
 	font-weight: bold;
 }
+button.square.won {
+	background-color: rgb(248, 255, 47);
+}
 button.restart {
 	margin: 10px;
 	background-color: gray;

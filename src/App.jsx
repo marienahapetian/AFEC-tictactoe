@@ -1,9 +1,9 @@
 import "./App.css";
 import { useState } from "react";
 
-function Square({ value, onSquareClick }) {
+function Square({ value, onSquareClick, className }) {
 	return (
-		<button className="square" onClick={onSquareClick}>
+		<button className={"square " + className} onClick={onSquareClick}>
 			{value ? value : "-"}
 		</button>
 	);
@@ -24,7 +24,10 @@ function checkWinner(squares) {
 	for (let i = 0; i < winningCombinations.length; i++) {
 		const [a, b, c] = winningCombinations[i];
 		if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-			return squares[a]; // returns X or O, based on the winner
+			return {
+				winner: squares[a],
+				indexes: [a, b, c],
+			}; // returns X or O, based on the winner
 		}
 	}
 	return null;
@@ -32,7 +35,7 @@ function checkWinner(squares) {
 
 function Board({ xIsNext, squares, onPlay, onRestart }) {
 	function handleClick(i) {
-		if (squares[i] || winner) {
+		if (squares[i] || winnerObj) {
 			return;
 		}
 		const nextSquares = squares.slice();
@@ -45,13 +48,18 @@ function Board({ xIsNext, squares, onPlay, onRestart }) {
 		onPlay(nextSquares);
 	}
 
-	const winner = checkWinner(squares);
+	const winnerObj = checkWinner(squares);
+	let wonIndexes = [];
+	if (winnerObj) {
+		const winner = winnerObj && winnerObj.winner;
+		wonIndexes = winnerObj && winnerObj.indexes;
+	}
 	let status;
 	let restart = false;
-	if (winner) {
-		status = "Winner: " + winner;
+	if (winnerObj) {
+		status = "Winner: " + winnerObj.winner;
 		restart = true;
-	} else if (!winner && !squares.filter((sq) => sq == null).length) {
+	} else if (!winnerObj && !squares.filter((sq) => sq == null).length) {
 		status = "Game over! Friendship won";
 		restart = true;
 	} else {
@@ -61,22 +69,22 @@ function Board({ xIsNext, squares, onPlay, onRestart }) {
 	return (
 		<>
 			<h1>Tic Tac Toe</h1>
-			<div className={"abs " + (winner ? "winner" : restart ? "restart" : "status")}>{status}</div>
+			<div className={"abs " + (winnerObj ? "winner" : restart ? "restart" : "status")}>{status}</div>
 
 			<div className="board-row">
-				<Square value={squares[0]} onSquareClick={() => handleClick(0)} />
-				<Square value={squares[1]} onSquareClick={() => handleClick(1)} />
-				<Square value={squares[2]} onSquareClick={() => handleClick(2)} />
+				<Square value={squares[0]} className={wonIndexes.includes(0) && "won"} onSquareClick={() => handleClick(0)} />
+				<Square value={squares[1]} className={wonIndexes.includes(1) && "won"} onSquareClick={() => handleClick(1)} />
+				<Square value={squares[2]} className={wonIndexes.includes(2) && "won"} onSquareClick={() => handleClick(2)} />
 			</div>
 			<div className="board-row">
-				<Square value={squares[3]} onSquareClick={() => handleClick(3)} />
-				<Square value={squares[4]} onSquareClick={() => handleClick(4)} />
-				<Square value={squares[5]} onSquareClick={() => handleClick(5)} />
+				<Square value={squares[3]} className={wonIndexes.includes(3) && "won"} onSquareClick={() => handleClick(3)} />
+				<Square value={squares[4]} className={wonIndexes.includes(4) && "won"} onSquareClick={() => handleClick(4)} />
+				<Square value={squares[5]} className={wonIndexes.includes(5) && "won"} onSquareClick={() => handleClick(5)} />
 			</div>
 			<div className="board-row">
-				<Square value={squares[6]} onSquareClick={() => handleClick(6)} />
-				<Square value={squares[7]} onSquareClick={() => handleClick(7)} />
-				<Square value={squares[8]} onSquareClick={() => handleClick(8)} />
+				<Square value={squares[6]} className={wonIndexes.includes(6) && "won"} onSquareClick={() => handleClick(6)} />
+				<Square value={squares[7]} className={wonIndexes.includes(7) && "won"} onSquareClick={() => handleClick(7)} />
+				<Square value={squares[8]} className={wonIndexes.includes(8) && "won"} onSquareClick={() => handleClick(8)} />
 			</div>
 
 			{restart && (
@@ -95,16 +103,16 @@ export default function Game() {
 
 	const currentSquares = history[currentMove];
 
-	const moves = history.map((squares, move) => {
+	const moves = history.map((historySteps, moveIndex) => {
 		let description;
-		if (move > 0) {
-			description = "Go to move #" + move;
+		if (moveIndex > 0) {
+			description = "Go to move #" + moveIndex;
 		} else {
 			description = "Go to game start";
 		}
 		return (
-			<li key={move}>
-				<button onClick={() => jumpTo(move)}>{description}</button>
+			<li key={moveIndex}>
+				<button onClick={() => jumpTo(moveIndex)}>{description}</button>
 			</li>
 		);
 	});
