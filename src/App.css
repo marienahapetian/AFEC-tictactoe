@@ -1,0 +1,82 @@
+body {
+	justify-content: center;
+}
+#root {
+	max-width: 1280px;
+	margin: 0 auto;
+	padding: 2rem;
+	text-align: center;
+}
+
+.winner {
+	padding: 10px;
+	border-radius: 10px;
+	background: green;
+	color: white;
+	margin-bottom: 10px;
+	font-weight: bold;
+}
+.status {
+	padding: 10px;
+	border-radius: 10px;
+	background: orange;
+	color: black;
+	margin-bottom: 10px;
+}
+.restart {
+	padding: 10px;
+	border-radius: 10px;
+	background: rgb(197, 60, 255);
+	color: white;
+	margin-bottom: 10px;
+}
+
+.logo {
+	height: 6em;
+	padding: 1.5em;
+	will-change: filter;
+	transition: filter 300ms;
+}
+.logo:hover {
+	filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+	filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+button.square {
+	height: 100px;
+	width: 100px;
+	margin: 5px;
+	box-sizing: border-box;
+	background-color: bisque;
+	font-weight: bold;
+}
+button.restart {
+	margin: 10px;
+	background-color: gray;
+	color: white;
+}
+
+@keyframes logo-spin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	a:nth-of-type(2) .logo {
+		animation: logo-spin infinite 20s linear;
+	}
+}
+
+.card {
+	padding: 2em;
+}
+
+.read-the-docs {
+	color: #888;
+}
